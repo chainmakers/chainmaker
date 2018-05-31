@@ -1,0 +1,16 @@
+#!/bin/bash
+
+sudo add-apt-repository ppa:bitcoin/bitcoin -y
+sudo apt-get update
+sudo apt-get -y install bitcoind
+
+cd ~/
+mkdir .bitcoin
+cd .bitcoin
+echo "server=1" >> ~/.bitcoin/bitcoin.conf
+echo "daemon=1" >> ~/.bitcoin/bitcoin.conf
+echo "rpcuser=bitcoinrpc" >> ~/.bitcoin/bitcoin.conf
+echo "rpcpassword=password" >> ~/.bitcoin/bitcoin.conf
+echo "listen=1" >> ~/.bitcoin/bitcoin.conf
+echo "prune=4096" >> ~/.bitcoin/bitcoin.conf
+bitcoind -daemon

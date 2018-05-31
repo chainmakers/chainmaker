@@ -1,0 +1,30 @@
+#!/bin/bash
+FSTAB=$1
+
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo su -c "echo '$FSTAB' >> /etc/fstab"
+
+sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev libdb++-dev
+rm -rf bitcoin-abc
+git clone https://github.com/Bitcoin-ABC/bitcoin-abc
+cd bitcoin-abc
+./autogen.sh
+./configure --with-incompatible-bdb --with-gui=no --disable-tests --disable-bench --without-miniupnpc --disable-zmq
+make -j4
+sudo cp src/bitcoind /usr/local/bin/bchd
+sudo cp src/bitcoin-cli /usr/local/bin/bch-cli
+sudo strip /usr/local/bin/bch*
+mkdir ~/.bch
+echo "server=1" >> ~/.bch/bch.conf
+echo "listen=1" >> ~/.bch/bch.conf
+echo "rpcport=33333" >> ~/.bch/bch.conf
+echo "rpcuser=barterbch" >> ~/.bch/bch.conf
+echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >> ~/.bch/bch.conf
+echo "rpcworkqueue=64" >> ~/.bch/bch.conf
+echo "rpcthreads=16" >> ~/.bch/bch.conf
+echo "prune=4096" >> ~/.bch/bch.conf
+chmod 0600 ~/.bch/bch.conf
+bchd -daemon -datadir=$HOME/.bch -conf=bch.conf

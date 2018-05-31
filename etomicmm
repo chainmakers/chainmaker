@@ -1,0 +1,135 @@
+#!/bin/bash
+
+
+#This is a guide to install marketmaker with KMD and ETH and provide liquidity.
+#Use this on a server without firewall, firewalled and NATed connections will not work.
+#Everything is just cut & paste, only the steps named "create a file named xxx" need you to first start an editor and cut & paste the content into that files.
+#We will generate 3 files: client_my (for starting mm), enable_my (for enabling the coins) and autoprice_my (for setting prices).
+
+#API documentation is here: https://github.com/KomodoPlatform/KomodoPlatform/wiki/BarterDEX-API-Summary-by-Category
+
+
+######### prepare the server #########
+
+### package names are from Debian 9, it might or might not work with others Linuxes
+sudo apt-get install -y fail2ban ntp git wget curl \
+build-essential cmake libtool autotools-dev automake autoconf pkg-config python \
+libcurl4-gnutls-dev libevent-dev libdb++-dev zlib1g-dev libssl-dev \
+libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-program-options-dev libboost-test-dev libboost-thread-dev libboost-random-dev \
+clang libsodium-dev libleveldb-dev
+
+
+######### install KMD and ETOMIC wallet #########
+
+### rpcuser is barterkmd/barteretomic, password is random
+cd
+git clone https://github.com/jl777/komodo
+cd komodo
+git checkout dev && git pull
+./zcutil/fetch-params.sh
+./zcutil/build.sh -j2
+strip src/komodod src/komodo-cli src/komodo-tx
+sudo cp src/komodod src/komodo-cli /usr/local/bin/
+mkdir ~/.komodo
+echo "server=1" >> ~/.komodo/komodo.conf
+echo "txindex=1" >> ~/.komodo/komodo.conf
+echo "rpcuser=barterkmd" >> ~/.komodo/komodo.conf
+echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >> ~/.komodo/komodo.conf
+echo "rpcworkqueue=64" >> ~/.komodo/komodo.conf
+echo "rpcthreads=16" >> ~/.komodo/komodo.conf
+chmod 0600 ~/.komodo/komodo.conf
+komodod -daemon
+
+mkdir ~/.komodo/ETOMIC
+echo "server=1" >> ~/.komodo/ETOMIC/ETOMIC.conf
+echo "txindex=1" >> ~/.komodo/ETOMIC/ETOMIC.conf
+echo "rpcport=10271" >> ~/.komodo/ETOMIC/ETOMIC.conf
+echo "rpcuser=barteretomic" >> ~/.komodo/ETOMIC/ETOMIC.conf
+echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >> ~/.komodo/ETOMIC/ETOMIC.conf
+echo "rpcworkqueue=64" >> ~/.komodo/ETOMIC/ETOMIC.conf
+echo "rpcthreads=16" >> ~/.komodo/ETOMIC/ETOMIC.conf
+chmod 0600 ~/.komodo/ETOMIC/ETOMIC.conf
+komodod -ac_name=ETOMIC -ac_supply=100000000 -addnode=78.47.196.146 -daemon
+
+
+######### install marketmaker #########
+
+### clone the repo
+cd
+git clone https://github.com/jl777/SuperNET
+cd ~/SuperNET
+git checkout dev && git pull
+
+### get newest marketmaker-binary and copy it to right directory (look for newest release here https://github.com/artemii235/SuperNET/releases and use the link for the wget call)
+cd
+wget https://github.com/artemii235/SuperNET/releases/download/v1.0.188/marketmaker-linux-51dd976.tar.gz
+tar -xvzf marketmaker-linux-*.tar.gz
+mv marketmaker-mainnet ~/SuperNET/iguana/marketmaker
+rm marketmaker-*
+
+### run install script
+cd ~/SuperNET/iguana/exchanges
+./install
+cd ../dexscripts
+
+### generate random passphrase and write it in the file named passpharse
+echo "export passphrase=\"`head -c 32 /dev/urandom | base64`\"" > passphrase
+chmod 0600 passphrase
+
+### create a file named "client_my" with the following content
+#!/bin/bash
+source passphrase
+source coins
+./stop
+cd ..; 
+pkill -15 marketmaker; 
+stdbuf -oL nohup ./marketmaker "{\"gui\":\"nogui\",\"client\":1, \"userhome\":\"/${HOME#"/"}\", \"passphrase\":\"$passphrase\", \"coins\":$coins, \"canbind\":1}" > ~/mm.log &
+
+### make the script executable and run it
+chmod +x client_my
+./client_my
+
+### make userpass
+echo "export userpass=\"`./setpassphrase | cut -d \"\\"\" -f 8`\"" > userpass
+chmod 0600 userpass
+
+### create a file named "enable_my" with the following content (example with KMD and ETH)
+source userpass
+./setpassphrase > /dev/null
+curl -s --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"enable\",\"coin\":\"KMD\"}"
+curl -s --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"enable\",\"coin\":\"ETOMIC\"}"
+curl -s --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"enable\",\"coin\":\"ETH\"}"
+
+### make the script executable and run it
+chmod 755 enable_my
+./enable_my
+
+### create a file named "autoprice_my" with the following content (example with ETH/KMD pair and 4% margin, price source is cmc)
+source userpass
+curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"autoprice\",\"base\":\"ETH\",\"rel\":\"KMD\",\"margin\":0.04,\"refbase\":\"ethereum\",\"refrel\":\"coinmarketcap\"}"
+
+### make the script executable and run it
+chmod 755 autoprice_my
+./autoprice_my
+
+### only thing left to do is funding the coins (beware the utxos for KMD and ETOMIC!)
+cd ~/SuperNET/iguana/dexscripts && source userpass
+curl -s --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"getcoin\",\"coin\":\"ETOMIC\"}" | json_pp
+# send ETOMIC to the shown "smartaddress"
+curl -s --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"getcoin\",\"coin\":\"KMD\"}" | json_pp
+# send KMD to the shown "smartaddress"
+curl -s --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"getcoin\",\"coin\":\"ETH\"}" | json_pp
+# send ETH to the shown "smartaddress"
+
+### look what mm is doing by looking at the logfile
+tail -f ~/mm.log
+
+
+######### restart marketmaker #########
+
+cd ~/SuperNET/iguana/dexscripts && source userpass
+./client_my && sleep 10
+./enable_my
+./autoprice_my
+tail -f ~/mm.log
+

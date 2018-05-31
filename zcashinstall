@@ -1,0 +1,17 @@
+#!/bin/bash
+FSTAB=$1
+
+sudo swapoff -a
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo su -c "echo '$FSTAB' >> /etc/fstab"
+
+sudo rm -rf ~/zcash
+git clone https://github.com/zcash/zcash
+cd ~/zcash
+sudo ./zcutil/fetch-params.sh
+sudo ./zcutil/build.sh -j2
+cd ~/zcash/src
+./zcashd -daemon

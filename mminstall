@@ -1,0 +1,46 @@
+#!/bin/bash
+
+
+
+sudo apt-get update && sudo apt-get install -y cmake git libcurl4-openssl-dev build-essential
+
+
+cd ~
+git clone https://github.com/nanomsg/nanomsg
+cd nanomsg
+cmake . -DNN_TESTS=OFF -DNN_ENABLE_DOC=OFF
+make -j2
+sudo make install
+sudo ldconfig
+
+cd ~
+git clone https://github.com/jl777/SuperNET
+cd ~/SuperNET/iguana/exchanges
+git checkout dev
+./install
+
+
+cp passphrase ../dexscripts/passphrase
+cp setpassphrase ../dexscripts/setpassphrase
+cd ../dexscripts
+echo "export passphrase='"`head -c 32 /dev/urandom | base64`"'" > ~/SuperNET/iguana/dexscripts/passphrase
+./client &
+sleep 60
+./setpassphrase |  cut -d ":" -f 3 | cut -d "\"" -f 2 > userpass.txt
+echo "export userpass='""$(cat passphrase.txt)""'" > ~/SuperNET/iguana/dexscripts/userpass
+rm ~/SuperNET/iguana/dexscripts/userpass.txt
+echo -e '#!/bin/bash' > ~/SuperNET/iguana/dexscripts/client
+echo "source passphrase" >> ~/SuperNET/iguana/dexscripts/client
+echo "source coins" >> ~/SuperNET/iguana/dexscripts/client
+echo "./stop" >> ~/SuperNET/iguana/dexscripts/client
+echo "git pull;" >> ~/SuperNET/iguana/dexscripts/client
+echo "cp ../exchanges/updateprices .;./updateprices" >> ~/SuperNET/iguana/dexscripts/client
+echo "cd ..;" >> ~/SuperNET/iguana/dexscripts/client
+echo "./m_mm;" >> ~/SuperNET/iguana/dexscripts/client
+echo "pkill -15 marketmaker;" >> ~/SuperNET/iguana/dexscripts/client
+echo "stdbuf -oL $1 ./marketmaker "{\\\"gui\\\":\\\"nogui\\\",\\\"client\\\":1,\\\"canbind\\\":1,\\\"userhome\\\":\\\"/${HOME#"/"}\\\", \\\"passphrase\\\":\\\"$passphrase\\\", \\\"coins\\\":$coins}" &" >> ~/SuperNET/iguana/dexscripts/client
+./client &
+cd ~/SuperNET/iguana/dexscripts
+cat passphrase
+
+
