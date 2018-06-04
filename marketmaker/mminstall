@@ -27,7 +27,7 @@ echo "export passphrase='"`head -c 32 /dev/urandom | base64`"'" > ~/SuperNET/igu
 ./client &
 sleep 60
 ./setpassphrase |  cut -d ":" -f 3 | cut -d "\"" -f 2 > userpass.txt
-echo "export userpass='""$(cat passphrase.txt)""'" > ~/SuperNET/iguana/dexscripts/userpass
+echo "export userpass='""$(cat userpass.txt)""'" > ~/SuperNET/iguana/dexscripts/userpass
 rm ~/SuperNET/iguana/dexscripts/userpass.txt
 echo -e '#!/bin/bash' > ~/SuperNET/iguana/dexscripts/client
 echo "source passphrase" >> ~/SuperNET/iguana/dexscripts/client
