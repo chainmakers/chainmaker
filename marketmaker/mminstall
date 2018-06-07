@@ -38,7 +38,7 @@ echo "cp ../exchanges/updateprices .;./updateprices" >> ~/SuperNET/iguana/dexscr
 echo "cd ..;" >> ~/SuperNET/iguana/dexscripts/client
 echo "./m_mm;" >> ~/SuperNET/iguana/dexscripts/client
 echo "pkill -15 marketmaker;" >> ~/SuperNET/iguana/dexscripts/client
-echo "stdbuf -oL $1 ./marketmaker \"{\\\"gui\\\":\\\"nogui\\\",\\\"client\\\":1,\\\"canbind\\\":1,\\\"userhome\\\":\\\"/${HOME#"/"}\\\", \\\"passphrase\\\":\\\"$passphrase\\\", \\\"coins\\\":$coins}\" &" >> ~/SuperNET/iguana/dexscripts/client
+echo "stdbuf -oL $1 ./marketmaker \"{\\\"gui\\\":\\\"nogui\\\",\\\"client\\\":1,\\\"canbind\\\":1,\\\"userhome\\\":\\\"/\$\{HOME\#\"\/\"}\\\", \\\"passphrase\\\":\\\"$passphrase\\\", \\\"coins\\\":$coins}\" &" >> ~/SuperNET/iguana/dexscripts/client
 ./client &
 cd ~/SuperNET/iguana/dexscripts
 cat passphrase
