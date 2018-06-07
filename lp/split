@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ~/SuperNET/iguana/dexscripts
+source userpass
+curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"withdraw\",\"coin\":\"$1\",\"outputs\":[{\"$2\":$3},{\"$2\":$3},{\"$2\":$3},{\"$2\":$3},{\"$2\":$3}],\"broadcast\":1}"
+

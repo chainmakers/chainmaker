@@ -1,0 +1,6 @@
+#!/bin/bash
+cd ~/SuperNET/iguana/dexscripts
+source passphrase
+./stop
+
+
