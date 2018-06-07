@@ -27,7 +27,7 @@ echo "export passphrase='"`head -c 32 /dev/urandom | base64`"'" > ~/SuperNET/igu
 ./client &
 sleep 60
 ./setpassphrase |  cut -d ":" -f 3 | cut -d "\"" -f 2 > userpass.txt
-echo "export userpass='""$(cat passphrase.txt)""'" > ~/SuperNET/iguana/dexscripts/userpass
+echo "export userpass='""$(cat userpass.txt)""'" > ~/SuperNET/iguana/dexscripts/userpass
 rm ~/SuperNET/iguana/dexscripts/userpass.txt
 echo -e '#!/bin/bash' > ~/SuperNET/iguana/dexscripts/client
 echo "source passphrase" >> ~/SuperNET/iguana/dexscripts/client
@@ -38,7 +38,11 @@ echo "cp ../exchanges/updateprices .;./updateprices" >> ~/SuperNET/iguana/dexscr
 echo "cd ..;" >> ~/SuperNET/iguana/dexscripts/client
 echo "./m_mm;" >> ~/SuperNET/iguana/dexscripts/client
 echo "pkill -15 marketmaker;" >> ~/SuperNET/iguana/dexscripts/client
+<<<<<<< HEAD
 echo "stdbuf -oL $1 ./marketmaker \"{\\\"gui\\\":\\\"nogui\\\",\\\"client\\\":1,\\\"canbind\\\":1,\\\"userhome\\\":\\\"/\$\{HOME\#\"\/\"}\\\", \\\"passphrase\\\":\\\"$passphrase\\\", \\\"coins\\\":$coins}\" &" >> ~/SuperNET/iguana/dexscripts/client
+=======
+echo "stdbuf -oL $1 ./marketmaker \\"{\\\"gui\\\":\\\"nogui\\\",\\\"client\\\":1,\\\"canbind\\\":1,\\\"userhome\\\":\\\"/${HOME#"/"}\\\", \\\"passphrase\\\":\\\"$passphrase\\\", \\\"coins\\\":$coins}\\" &" >> ~/SuperNET/iguana/dexscripts/client
+>>>>>>> afbdc118b98c2280bfcd90a7519584b6f70b8891
 ./client &
 cd ~/SuperNET/iguana/dexscripts
 cat passphrase
