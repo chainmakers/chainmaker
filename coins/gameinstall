@@ -1,18 +1,25 @@
 #!/bin/bash
 
+sudo apt install libssl1.0-dev
+rm -rf ~/GameCredits
+rm -rf ~/.gamecredits
 cd ~/
-git clone https://github.com/gamecredits-project/gamecredits
-cd ~/gamecredits
+git clone https://github.com/gamecredits-project/GameCredits
+cd GameCredits
 ./autogen.sh
-./configure --with-incompatible-bdb
-make
-sudo make install
-
+./configure --with-incompatible-bdb --with-gui=no --disable-tests --disable-bench --without-miniupnpc --disable-zmq --enable-experimental-asm
+make -j4
+#sudo make install
+#sudo strip /usr/local/bin/gamecredits*
+sudo apt install libssl-dev
 mkdir ~/.gamecredits
+echo "server=1" >> ~/.gamecredits/gamecredits.conf
 echo "txindex=1" >> ~/.gamecredits/gamecredits.conf
-echo "daemon=1" >> ~/.gamecredits/gamecredits.conf
-echo "rpcuser=`head -c 32 /dev/urandom | base64`" >> ~/.gamecredits/gamecredits.conf
+echo "listen=0" >> ~/.gamecredits/gamecredits.conf
+echo "rpcuser=bartergame" >> ~/.gamecredits/gamecredits.conf
 echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >> ~/.gamecredits/gamecredits.conf
-cd ~/gamecredits/src
-./gamecreditsd -daemon
+echo "rpcworkqueue=64" >> ~/.gamecredits/gamecredits.conf
+echo "rpcthreads=16" >> ~/.gamecredits/gamecredits.conf
+chmod 0600 ~/.gamecredits/gamecredits.conf
+gamecreditsd -daemon
 
