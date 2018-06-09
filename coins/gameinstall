@@ -7,3 +7,12 @@ cd ~/gamecredits
 ./configure
 make
 sudo make install
+
+mkdir ~/.gamecredits
+echo "txindex=1" >> ~/.gamecredits/gamecredits.conf
+echo "daemon=1" >> ~/.gamecredits/gamecredits.conf
+echo "rpcuser=`head -c 32 /dev/urandom | base64`" >> ~/.gamecredits/gamecredits.conf
+echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >> ~/.gamecredits/gamecredits.conf
+cd ~/gamecredits/src
+./gamecreditsd -daemon
+
