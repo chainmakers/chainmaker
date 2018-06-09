@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd ~/
+git clone https://github.com/gamecredits-project/gamecredits
+cd ~/gamecredits
+./autogen.sh
+./configure
+make
+sudo make install
