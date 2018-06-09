@@ -4,7 +4,7 @@ cd ~/
 git clone https://github.com/gamecredits-project/gamecredits
 cd ~/gamecredits
 ./autogen.sh
-./configure
+./configure --with-incompatible-bdb
 make
 sudo make install
 
