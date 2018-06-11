@@ -40,6 +40,7 @@ rm ~/SuperNET/iguana/dexscripts/userpass.txt
 #echo "pkill -15 marketmaker;" >> ~/SuperNET/iguana/dexscripts/client
 #echo "stdbuf -oL $1 ./marketmaker \"{\\\"gui\\\":\\\"nogui\\\",\\\"client\\\":1,\\\"canbind\\\":1,\\\"userhome\\\":\\\"/\$\{HOME#\"/\"}\\\", \\\"passphrase\\\":\\\"$passphrase\\\", \\\"coins\\\":$coins}\" &" >> ~/SuperNET/iguana/dexscripts/client
 cp ~/chainmaker/lp/start ~/SuperNET/iguana/dexscripts/client
+cp ~/chainmaker/lp/getcoin ~/SuperNET/iguana/dexscripts/getcoin
 ./client &
 cd ~/SuperNET/iguana/dexscripts
 cat passphrase
