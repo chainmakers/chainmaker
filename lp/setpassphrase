@@ -1,0 +1,9 @@
+#!/bin/bash
+cd ~/SuperNET/iguana/dexscripts
+echo "export passphrase='"`head -c 32 /dev/urandom | base64`"'" > ~/SuperNET/iguana/dexscripts/passphrase
+./client &
+sleep 60
+./setpassphrase |  cut -d ":" -f 3 | cut -d "\"" -f 2 > userpass.txt
+echo "export userpass='""$(cat userpass.txt)""'" > ~/SuperNET/iguana/dexscripts/userpass
+rm ~/SuperNET/iguana/dexscripts/userpass.txt
+cat passphrase

@@ -3,4 +3,4 @@ cd ~/SuperNET/iguana/dexscripts
 source userpass
 ./getcoin $1 |  cut -d ":" -f 12 | cut -d "\"" -f 2 > getcoin.txt
 curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"withdraw\",\"coin\":\"$1\",\"outputs\":[{\"$(cat getcoin.txt)\":$2},{\"$(cat getcoin.txt)\":$2},{\"$(cat getcoin.txt)\":$2},{\"$(cat getcoin.txt)\":$2},{\"$(cat getcoin.txt)\":$2}],\"broadcast\":1}"
-
+rm getcoin.txt
