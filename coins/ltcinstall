@@ -1,0 +1,26 @@
+#!/bin/bash
+
+sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev libdb5.3++-dev
+sudo apt remove libdb4.8++-dev -y
+sudo apt purge libdb4.8++-dev
+sudo apt autoremove
+sudo apt install libdb5.3++-dev
+rm -rf ~/litecoin
+rm -rf ~/.litecoin
+cd ~/
+git clone https://github.com/litecoin-project/litecoin
+cd litecoin
+./autogen.sh
+./configure --with-incompatible-bdb --with-gui=no --disable-tests --disable-bench --without-miniupnpc --disable-zmq --enable-experimental-asm
+make -j4
+#sudo make install
+#sudo apt install libssl-dev
+mkdir ~/.litecoin
+echo "server=1" >> ~/.litecoin/litecoin.conf
+echo "listen=1" >> ~/.litecoin/litecoin.conf
+echo "rpcuser=bartergame" >> ~/.litecoin/litecoin.conf
+echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >> ~/.litecoin/litecoin.conf
+echo "prune=4096" >> ~/.litecoin/litecoin.conf
+cd ~/litecoin/src
+./litecoind -daemon
+
