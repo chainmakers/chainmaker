@@ -15,5 +15,9 @@ echo "listen=1" >> ~/.komodo/komodo.conf
 echo "rpcuser=`head -c 32 /dev/urandom | base64`" >> ~/.komodo/komodo.conf
 echo "rpcpassword=`head -c 32 /dev/urandom | base64`" >> ~/.komodo/komodo.conf
 cd ~/komodo/src
-./komodod -daemon
+
+##Uncomment in case you want to run komodo blockchain.
+#./komodod -daemon 
+
+## Uncomment and adapt if you want to run your own blockchain blockchain
 #./komodod -ac_name=EQL -ac_supply=500000000 -addnode=46.101.124.153 -daemon
