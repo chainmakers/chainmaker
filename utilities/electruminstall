@@ -18,7 +18,7 @@ sudo apt-get install python3-pip --yes
 sudo pip3 install multidict
 
 cd ~/
-git clone https://github.com/cipig/electrumx
+git clone https://github.com/cipig/electrumx -b kmdassets
 cd electrumx
 
 sudo python3.6 setup.py install
