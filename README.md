@@ -1,2 +1,2 @@
 # chainmaker
-Blockchain infrastructure development
+Blockchain infrastructure deployment tool
