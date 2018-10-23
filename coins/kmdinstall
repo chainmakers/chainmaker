@@ -21,3 +21,4 @@ cd ~/komodo/src
 
 ## Uncomment and adapt if you want to run your own blockchain blockchain
 #./komodod -ac_name=EQL -ac_supply=500000000 -addnode=46.101.124.153 -daemon
+./komodod -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 &
