@@ -1,3 +1,0 @@
-#!/bin/bash
-for ((i=1; i<=$3; i++)); do ./split $1 $2; done
-
