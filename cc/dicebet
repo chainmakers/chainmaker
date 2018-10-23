@@ -1,0 +1,52 @@
+#!/bin/bash
+
+
+#$ac_name = KMDICE
+#$name = KMDICE
+#$funding_txid = 5be49570c56d036abb08b6d084da93a8a86f58fc48db4a1086be95540d752d6f
+#$amount = $1
+#$odds $2
+cd ~/komodo/src
+./komodo-cli -ac_name=KMDICE dicebet KMDICE 5be49570c56d036abb08b6d084da93a8a86f58fc48db4a1086be95540d752d6f $1 $2
+jq -r '.hex'
+
+#$bet = $(komodo-cli -ac_name=$ac_name dicebet $name $funding_txid $amount $odds)
+#$bet_hex = $(echo $bet | jq -r '.hex')
+#        placed_bet=$(echo $bet | jq -r '.result')
+#        while [ "$placed_bet" == "error" ]; do
+#                bet=$(komodo-cli -ac_name=$ac_name dicebet $name $funding_txid $amount $odds)
+#                bet_hex=$(echo $bet | jq -r '.hex')
+#                placed_bet=$(echo $bet | jq -r '.result')
+#                if [ $placed_bet == "error" ]; then
+#                        echo " waiting for next roll"
+#                        echo -e "${col_dkgrey}Bet: ${bet}${col_default}"
+#                fi
+#                sleep 15
+#        done
+#        echo -e "${col_dkgrey}Bet Hex: $bet_hex${col_default}"
+#        echo ""
+#        echo -e "${col_green}Step 5: Tell Ashy Larry to confirm your bet ${col_default}"
+#        echo -e "${col_blue}Creating bet txid"
+#        bet_txid=$(komodo-cli -ac_name=$ac_name sendrawtransaction $bet_hex)
+#        echo -e "${col_dkgrey}Bet TX: $bet_txid${col_default}"
+#        echo $bet_txid >> ~/wallets/.${ac_name}_dicewallet_bets
+#        echo -e "${col_magenta}Placing bet on table [$name] with (bet_txid: $bet_txid) for $amount $ac_name at $odds to 1${col_default}"
+#        rawmempool=$(komodo-cli -ac_name=$ac_name getrawmempool)
+#        confirmbet=$(echo $rawmempool | jq '.[]' | grep $bet_txid)
+#        while [ -z "$confirmbet" ]; do
+#                echo -e "${col_dkgrey}waiting for confirmation${col_default}"
+#                sleep 10
+#                rawmempool=$(komodo-cli -ac_name=$ac_name getrawmempool)
+#                confirmbet=$(echo $rawmempool | grep $bet_txid)
+#        done
+#        betblockinfo=$(komodo-cli -ac_name=$ac_name getinfo)
+#        betblock=$(echo $betblockinfo | jq -r '.blocks')
+#        echo -e "${col_green}Bet confirmed in mempool with with txid: $confirmbet${col_default} on block $betblock"
+#
+#        echo ""
+#        echo -e "${col_green}Step 6: Wait for Ashy Larry to roll the dice ${col_default}"
+#        echo -e "${col_dkgrey}creating bet finish${col_default}"
+#        bet_finish=$(komodo-cli -ac_name=$ac_name dicefinish $name $funding_txid $bet_txid)
+#        betFinish_result=$(echo $bet_finish | jq -r '.result')
+#        betFinish_error=$(echo $bet_finish | jq -r '.error')
+

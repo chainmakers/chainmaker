@@ -1,0 +1,17 @@
+#!/bin/bash
+
+####to use this script, execute it with coin to buy, coin to sell and price in coin to sell
+#### Example:
+####
+####          ./setorders BTC KMD 0.00020
+####
+###  Here your 
+##
+#
+cd ~/SuperNET/iguana/dexscripts
+margin=0.05
+source userpass
+
+curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"autoprice\",\"base\":\"$1\",\"rel\":\"$2\",\"fixed\":$3,\"margin\":$margin}"
+
+
