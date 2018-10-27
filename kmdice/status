@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ~/komodo/src
+bet_txid=$(cat ~/bettxid.txt)
+status=$(./komodo-cli -ac_name=KMDICE dicestatus KMDICE 5be49570c56d036abb08b6d084da93a8a86f58fc48db4a1086be95540d752d6f $bet_txid)
+echo $status
