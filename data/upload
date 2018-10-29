@@ -1,0 +1,7 @@
+#! /bin/bash
+
+gpg=$(gpg -aer Chainmakers)
+bits=$(echo -e $gpg | xxd -b -p | tr -d '\n')
+cd ~/CoquiCash/src
+./coqui-cli kvupdate $1 $bits 31 1234
+

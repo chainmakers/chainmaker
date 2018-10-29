@@ -1,0 +1,16 @@
+#! /bin/bash
+
+cd ~/CoquiCash/src
+dl=$(./coqui-cli kvsearch $1 | jq '.value')
+messagehex=$(echo $dl | xxd -r -p)
+#echo $messagehex
+echo $messagehex | tr " " "\n" > ./message.txt
+echo "-----BEGIN PGP MESSAGE-----" > gpg.txt
+echo "Version: GnuPG v1" >> gpg.txt
+echo " " >> gpg.txt
+cat message.txt | sed '1,6d'| head -n -3 >> gpg.txt
+echo "-----END PGP MESSAGE-----" >> gpg.txt
+cat gpg.txt
+cat gpg.txt | gpg -d 
+
+
