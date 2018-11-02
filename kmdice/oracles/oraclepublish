@@ -1,0 +1,14 @@
+#! /bin/bash
+
+#gpg=$(gpg -aer Chainmakers)
+cd ~/komodo/src
+balance=$(./komodo-cli -ac_name=KMDICE getaddressbalance '{"addresses": ["REabWB7KjFN5C3LFMZ5odExHPenYzHLtVw"]}' | jq '.balance')
+count=$(printf "%.4x" ${#balance} | tac -rs .. | echo "$(tr -d '\n')")
+echo $count
+#count=$(echo -n $gpg | wc -c | xxd -b -p)
+bits=$(echo -e $balance | xxd -b -p | tr -d '\n')
+echo $count$bits
+cd ~/komodo/src
+hex=$(echo $(./komodo-cli -ac_name=KMDICE oraclesdata 322dd0c55601f3e459bb78f2a5dcf202d4de851fd6e20629b4c489284712076f $count$bits | jq '.hex' ))
+rawtx=$(echo "${hex:1: -1}")
+./komodo-cli -ac_name=KMDICE sendrawtransaction $rawtx

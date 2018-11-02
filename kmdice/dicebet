@@ -5,6 +5,9 @@ cd ~/komodo/src
 getinfo=$(./komodo-cli -ac_name=KMDICE getinfo)
 balance=$(echo $getinfo | jq -r '.balance')
 echo 'Wallet balance:' $balance
+entropy=$(./komodo-cli -ac_name=KMDICE diceinfo 5be49570c56d036abb08b6d084da93a8a86f58fc48db4a1086be95540d752d6f)
+entropytx=$(echo $entropy | jq -r '.entropytxs')
+echo 'Entropy txs available:' $entropytx
 bet=$(./komodo-cli -ac_name=KMDICE dicebet KMDICE 5be49570c56d036abb08b6d084da93a8a86f58fc48db4a1086be95540d752d6f  $1 $2)
 bet_hex=$(echo $bet | jq -r '.hex')
 bet_txid=$(./komodo-cli -ac_name=KMDICE sendrawtransaction $bet_hex)

@@ -1,0 +1,23 @@
+#! /bin/bash
+
+
+cd ~/komodo/src
+oraclecreate=$(./komodo-cli -ac_name=KMDICE oraclescreate $1 $2 $3)
+oraclehex=$(echo $oraclecreate | jq '.hex')
+oracletxid=$(./komodo-cli -ac_name=KMDICE sendrawtransaction $oraclehex)
+echo "This is the $1 Oracletxid: $oracletxid"
+sleep 30
+echo "Registering as publisher"
+register=$(./komodo-cli -ac_name=KMDICE oraclesregister $oracletxid 100000)
+registerhex=$(echo $register | jq '.hex')
+registertxid=$(./komodo-cli sendrawtransaction $registerhex)
+publisher=$(./komodo-cli -ac_name=KMDICE oraclesinfo $oracletxid | jq '.publisher')
+echo "You have registered to $1: $registertxid"
+sleep 30
+echo "Subscribing to $1 oracle"
+subscribe=$(./komodo-cli -ac_name=KMDICE oraclessubscribe $oracletxid $publisher 1
+subscribehex=$(echo $subscribe | jq '.hex'
+subscribetxid=$(./komodo-cli -ac_name=KMDICE sendrawtransactions $subscribehex)
+echo "You are subscribed to $1: $subscribetxid"
+echo "You can now submit and read data from $1 oracle"
+

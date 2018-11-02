@@ -1,0 +1,5 @@
+#! /bin/bash
+
+
+cd ~/komodo/src
+./komodo-cli -ac_name=KMDICE oraclessamples 322dd0c55601f3e459bb78f2a5dcf202d4de851fd6e20629b4c489284712076f $1 1
