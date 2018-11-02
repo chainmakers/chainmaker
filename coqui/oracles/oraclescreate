@@ -1,0 +1,27 @@
+#! /bin/bash
+
+name=$1
+description=$2
+format=$3
+
+cd ~/CoquiCash/src
+oraclecreate=$(./coqui-cli oraclescreate $1 $2 $3 | jq '.hex')
+oraclehex=$(echo "${oraclecreate:1: -1}")
+oracletxid=$(./coqui-cli sendrawtransaction $oraclehex)
+echo "This is the $1 Oracletxid: $oracletxid"
+sleep 30
+echo "Registering as publisher"
+register=$(./coqui-cli oraclesregister $oracletxid 100000 | jq '.hex'))
+registerhex=$(echo "${register:1: -1}")
+registertxid=$(./coqui-cli sendrawtransaction $registerhex)
+publisher=$(./coqui-cli oraclesinfo $oracletxid | jq '.publisher')
+publisherpubkey=$(echo "${publisher:1: -1}")
+echo "You have registered to $1: $registertxid"
+sleep 30
+echo "Subscribing to $1 oracle"
+subscribe=$(./coqui-cli oraclessubscribe $oracletxid $publisherpubkey 1 | jq '.hex')
+subscribehex=$(echo "${subscribe:1: -1}")
+subscribetxid=$(./coqui-cli sendrawtransaction $subscribehex)
+echo "You are subscribed to $1: $subscribetxid"
+echo "You can now submit and read data from $1 oracle"
+

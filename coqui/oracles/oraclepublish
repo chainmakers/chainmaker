@@ -1,0 +1,13 @@
+#! /bin/bash
+
+gpg=$(gpg -aer Chainmakers)
+#count=$(echo -n $1 | wc -m | xargs printf "%.4x" | tac -rs .. )
+count=$(printf "%.4x" ${#gpg} | tac -rs .. | echo "$(tr -d '\n')")
+bits=$(echo -e $gpg | xxd -b -p | tr -d '\n')
+echo $count$bits
+cd ~/CoquiCash/src
+hex=$(./coqui-cli oraclesdata 94f1fccdc3a122f3a611144a4b243f2ebc3416f5e0bcd762a39f176f12d3719c $count$bits | jq '.hex')
+echo $hex
+rawtx=$(echo "${hex:1: -1}")
+echo $rawtx
+./coqui-cli sendrawtransaction $rawtx

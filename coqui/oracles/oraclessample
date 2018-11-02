@@ -1,0 +1,5 @@
+#! /bin/bash
+
+
+cd ~/CoquiCash/src
+./coqui-cli oraclessamples 94f1fccdc3a122f3a611144a4b243f2ebc3416f5e0bcd762a39f176f12d3719c $1 1

@@ -1,0 +1,4 @@
+#!/bin/sh
+hex=$(printf "$1" | xxd -ps)
+len=$(printf "%.4X" ${#1} | tac -rs .. | echo "$(tr -d '\n')")
+echo $len$hex
