@@ -1,7 +1,6 @@
 #! /bin/bash
 
 gpg=$(gpg -aer Chainmakers)
-#count=$(echo -n $1 | wc -m | xargs printf "%.4x" | tac -rs .. )
 count=$(printf "%.4x" ${#gpg} | tac -rs .. | echo "$(tr -d '\n')")
 bits=$(echo -e $gpg | xxd -b -p | tr -d '\n')
 echo $count$bits
