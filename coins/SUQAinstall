@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#clone SUQA
+cd ~/
+git clone https://github.com/SUQAORG/SUQA-CORE
+
+#install dependencies
+sudo apt-get install build-essential libtool autotools-dev automake autoconf pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev libdb++-dev -y
+
+#Install BDB
+cd ~/SUQA-CORE
+git clone https://github.com/bitcoin/bitcoin.git
+cd bitcoin
+git checkout 0.16
+
+BDB 4.8 for bitcoin
+BTC_ROOT=$(pwd)
+BDB_PREFIX="${BTC_ROOT}/db4"
+mkdir -p $BDB_PREFIX
+wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz'
+echo '12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef  db-4.8.30.NC.tar.gz' | sha256sum -c
+tar -xzvf db-4.8.30.NC.tar.gz
+cd db-4.8.30.NC/build_unix/
+../dist/configure -enable-cxx -disable-shared -with-pic -prefix=$BDB_PREFIX
+make -j$(nproc)
+make install
+
+
+#build SUQA
+
+cd ~/SUQA-CORE
+./autogen.sh
+./configure --disable-tests --with-incompatible-bdb --disable-shared --with-pic --with-bignum=no --with-gui=no --disable-hardening CPPFLAGS=-fPIC
+make
+
+
