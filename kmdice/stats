@@ -1,0 +1,14 @@
+#!/bin/bash
+
+loss=$(tr ' ' '\n' < ~/bets.txt | grep loss | wc -l)
+win=$(tr ' ' '\n' < ~/bets.txt | grep win | wc -l)
+null=$(tr ' ' '\n' < ~/bets.txt | grep null | wc -l)
+betstillpending=$(cat ~/bets.txt | grep "bet still pending" | wc -l)
+total=$(wc -l < ~/bets.txt)
+totalbets=$(echo ''$total' / 2' | bc)
+
+echo 'Wins:' $win
+echo 'Losses:' $loss
+echo 'Bets still pending:' $betstillpending
+echo 'Nulls:' $null
+echo 'Total bets': $totalbets
