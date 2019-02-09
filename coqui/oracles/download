@@ -1,17 +1,18 @@
 #! /bin/bash
 
 cd ~/CoquiCash/src
+dl=$(./coqui-cli oraclessamples 94f1fccdc3a122f3a611144a4b243f2ebc3416f5e0bcd762a39f176f12d3719c $1 1 | jq '.samples')
 #dl=$(./coqui-cli kvsearch $1 | jq '.value')
 #messagehex=$(echo $1 | xxd -r -p)
 #echo $messagehex
-echo $1 | tr " " "\n" > ./message.txt
-echo "-----BEGIN PGP MESSAGE-----" > gpg.txt
-echo "Version: GnuPG v1" >> gpg.txt
-echo " " >> gpg.txt
-cat message.txt | sed '1,6d'| head -n -3 >> gpg.txt
-echo "-----END PGP MESSAGE-----" >> gpg.txt
+echo $dl | tr " " "\n" > ./message.txt
+echo "-----BEGIN PGP MESSAGE-----" > ./gpg.txt
+echo "Version: GnuPG v1" >> ./gpg.txt
+echo " " >> ./gpg.txt
+cat message.txt | sed '1,6d'| head -n -3 >> ./gpg.txt
+echo "-----END PGP MESSAGE-----" >> ./gpg.txt
 rm ./message.txt
-cat gpg.txt
-cat gpg.txt | gpg -d 
+cat ./gpg.txt
+#cat gpg.txt | gpg -d 
 
 

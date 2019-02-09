@@ -1,0 +1,10 @@
+#!/bin/bash
+cd ~/SuperNET/target/debug
+source passphrase
+source coins
+source userpass
+./stop
+stdbuf -oL ./mm2 "{\"gui\":\"alien\",\"myipaddr\":\"127.0.0.1\",\"netid\":9999,\"client\":1,\"userhome\":\"/${HOME#"/"}\", \"passphrase\":\"$passphrase\",\"coins\":$coins}" &
+sleep 20
+cd ~/chainmaker/lp/
+./electrum
