@@ -1,0 +1,6 @@
+#! /bin/bash
+cd ~/SuperNET/target/debug
+source userpass
+curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"electrum\",\"coin\":\"REVS\",\"urls\":[\"electrum1.cipig.net:10003\",\"electrum2.cipig.net:10003\",\"electrum3.cipig.net:10003\"]}"
+curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"electrum\",\"coin\":\"BOTS\",\"urls\":[\"electrum1.cipig.net:10007\",\"electrum2.cipig.net:10007\",\"electrum3.cipig.net:10007\"]}"
+curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"electrum\",\"coin\":\"BET\",\"urls\":[\"electrum1.cipig.net:10012\",\"electrum2.cipig.net:10012\",\"electrum3.cipig.net:10012\"]}"
