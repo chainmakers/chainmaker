@@ -32,10 +32,11 @@ git checkout mm2
 cargo build -vv
 
 # Set passphrase and userpass
-cp ~/chainmakers/lp/passphrase ../target/debug/passphrase
-cp ~/chainmakers/lp/coins ../target/debug/coins
-cp ~/chainmakers/lp/client ../target/debug/client
+cp ~/chainmaker/lp/passphrase ../target/debug/passphrase
+cp ~/chainmaker/lp/userpass ../target/debug/userpass
+cp ~/chainmaker/lp/coins ../target/debug/coins
+cp ~/chainmaker/lp/client ../target/debug/client
 
 cd ~/SuperNET/target/debug
 
-echo "export passphrase='"`head -c 32 /dev/urandom | base64`"'" > ~/SuperNET/iguana/dexscripts/passphrase
+echo "export passphrase='"`head -c 32 /dev/urandom | base64`"'" > ~/SuperNET/target/debug/passphrase

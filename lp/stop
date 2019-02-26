@@ -1,6 +1,7 @@
 #!/bin/bash
-cd ~/SuperNET/iguana/dexscripts
+cd ~/SuperNET/target/debug
 source passphrase
-./stop
+curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"stop\"}"
+
 
 
