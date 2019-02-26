@@ -1,0 +1,15 @@
+#!/bin/bash
+
+while true; do 
+
+	base=$1
+	rel=$2
+	price=$(curl https://www.atomicexplorer.com/api/ticker | jq -r '.result.'$base'.'$rel'')
+	cd ~/SuperNET/target/debug
+	source passphrase
+	source userpass
+	BASE=$(echo $1 | tr '[:lower:]' '[:upper:]')
+	REL=$(echo $2 | tr '[:lower:]' '[:upper:]')
+	curl --url "http://127.0.0.1:7783" --data "{\"userpass\":\"$userpass\",\"method\":\"setprice\",\"base\":\"$BASE\",\"rel\":\"$REL\",\"price\": $price,\"broadcast\":1}"
+	sleep 60
+done
